@@ -18,3 +18,14 @@ Thumbs.db
 # Personal files
 sanshkaf_i2c.ino
 
+# Setup and helper scripts (not part of repository)
+create_github_repo.ps1
+setup_github.ps1
+setup_github_access.md
+GITHUB_SETUP.md
+
+# Old files moved to examples/
+Minimal_for_all.ino
+pressure_i2c_pca9548a.md
+pressure_i2c_pca9548a_min.ino
+
