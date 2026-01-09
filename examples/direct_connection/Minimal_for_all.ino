@@ -40,6 +40,16 @@ float rawPressureToBar(uint32_t raw) {
   return k * ((float)raw - (float)DMIN) + PMIN;
 }
 
+/* ===== Temperature calculation ===== */
+/* ⚠️ ВАЖНО: Температура показывает очень неточно!
+ * Производитель рекомендует не использовать значение температуры как реальный термометр.
+ * Температура среды должна быть ниже 50°C.
+ * Формула из документации: T = (rawT / 65536) * 190 - 40
+ */
+float rawTemperatureToCelsius(uint16_t rawT) {
+  return (rawT / 65536.0f) * 190.0f - 40.0f;
+}
+
 void setup() {
   Serial.begin(115200);
   delay(200);
@@ -79,10 +89,13 @@ void loop() {
      (uint16_t)buf[5];
 
   float pBar = rawPressureToBar(rawP);
+  float tempC = rawTemperatureToCelsius(rawT);
 
   Serial.print("P=");
   Serial.print(pBar, 3);
-  Serial.print(" bar | rawP=");
+  Serial.print(" bar | T=");
+  Serial.print(tempC, 1);
+  Serial.print("°C (inaccurate!) | rawP=");
   Serial.print(rawP);
   Serial.print(" | rawT=");
   Serial.println(rawT);

@@ -1,68 +1,44 @@
 # Инструкция по выгрузке на GitHub
 
-Репозиторий уже инициализирован и файлы подготовлены. Следуйте этим шагам для выгрузки на GitHub:
+Репозиторий уже инициализирован, коммит создан, файлы готовы к выгрузке.
 
-## Шаг 1: Настройка Git (если еще не настроено)
+## Быстрый способ (рекомендуется)
 
-Если git еще не настроен, выполните:
+### Вариант 1: Автоматический скрипт (требуется токен)
 
-```bash
-git config --global user.email "ваш@email.com"
-git config --global user.name "Ваше Имя"
+1. Создайте Personal Access Token на https://github.com/settings/tokens
+   - Нажмите "Generate new token (classic)"
+   - Выберите права: **repo** (полный доступ к репозиториям)
+   - Скопируйте токен
+
+2. Запустите скрипт:
+```powershell
+cd C:\AI\Dev\11_pressure_i2c
+.\create_github_repo.ps1 -Token YOUR_TOKEN_HERE
 ```
 
-## Шаг 2: Создание репозитория на GitHub
+Скрипт автоматически:
+- Создаст репозиторий `i2c-pressure-sensor` на GitHub
+- Добавит remote
+- Выгрузит код
 
-1. Зайдите на https://github.com
-2. Нажмите кнопку **"New repository"** (или перейдите по прямой ссылке: https://github.com/new)
-3. Заполните:
-   - **Repository name:** `i2c-pressure-sensor` (или любое другое название)
+### Вариант 2: Вручную через веб-интерфейс
+
+1. Создайте репозиторий на https://github.com/new:
+   - **Repository name:** `i2c-pressure-sensor`
    - **Description:** `I2C Pressure Sensor 0-10 bar examples and practical notes for ESP32`
    - Выберите **Public** или **Private**
-   - **НЕ** создавайте README, .gitignore или лицензию (они уже есть)
-4. Нажмите **"Create repository"**
+   - **НЕ** создавайте README, .gitignore или лицензию
 
-## Шаг 3: Подключение удаленного репозитория
-
-После создания репозитория GitHub покажет инструкции. Выполните команды (замените `USERNAME` на ваш GitHub username):
-
-```bash
+2. Выполните команды:
+```powershell
 cd C:\AI\Dev\11_pressure_i2c
-git remote add origin https://github.com/USERNAME/i2c-pressure-sensor.git
-```
-
-Или если используете SSH:
-
-```bash
-git remote add origin git@github.com:USERNAME/i2c-pressure-sensor.git
-```
-
-## Шаг 4: Создание первого коммита
-
-Если git config еще не настроен, сначала настройте:
-
-```bash
-git config user.email "ваш@email.com"
-git config user.name "Ваше Имя"
-```
-
-Затем создайте коммит:
-
-```bash
-git add .
-git commit -m "Initial commit: I2C pressure sensor examples and documentation"
-```
-
-## Шаг 5: Выгрузка на GitHub
-
-```bash
+git remote add origin https://github.com/shururik/i2c-pressure-sensor.git
 git branch -M main
 git push -u origin main
 ```
 
-Если появится запрос авторизации:
-- Для HTTPS: используйте Personal Access Token (не пароль)
-- Для SSH: убедитесь что SSH ключ добавлен в GitHub
+При запросе авторизации используйте Personal Access Token (не пароль).
 
 ## Готово!
 

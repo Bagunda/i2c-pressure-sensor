@@ -43,6 +43,7 @@ struct Reading {
   uint16_t rawT16;
   float    p_bar;       // clamped >= 0
   float    p_bar_calc;  // may be negative
+  float    temp_c;       // temperature in Celsius (inaccurate!)
   bool     valid;
 };
 
@@ -113,6 +114,15 @@ static float rawPressureToBar(float raw) {
   return k * (raw - (float)DMIN) + PMIN;
 }
 
+/* ⚠️ ВАЖНО: Температура показывает очень неточно!
+ * Производитель рекомендует не использовать значение температуры как реальный термометр.
+ * Температура среды должна быть ниже 50°C.
+ * Формула из документации: T = (rawT / 65536) * 190 - 40
+ */
+static float rawTemperatureToCelsius(uint16_t rawT) {
+  return (rawT / 65536.0f) * 190.0f - 40.0f;
+}
+
 /* Read on CURRENT selected PCA channel.
    Returns valid=true only if a real frame was received. */
 static Reading readWithRetries(uint8_t tries) {
@@ -122,6 +132,7 @@ static Reading readWithRetries(uint8_t tries) {
   r.rawT16 = 0;
   r.p_bar = NAN;
   r.p_bar_calc = NAN;
+  r.temp_c = NAN;
   r.valid = false;
 
   // датчик должен отвечать на текущем канале
@@ -147,6 +158,7 @@ static Reading readWithRetries(uint8_t tries) {
 
     r.p_bar_calc = rawPressureToBar((float)r.rawP24);
     r.p_bar = (r.p_bar_calc < 0.0f) ? 0.0f : r.p_bar_calc;
+    r.temp_c = rawTemperatureToCelsius(r.rawT16);
 
     r.valid = true;
     return r; // первый успешный кадр
@@ -191,8 +203,8 @@ void loop() {
     // status — это первый байт ответа (как у тебя в логах 0x04)
     uint8_t status = r.b[0];
 
-    Serial.printf("ch=%u status=0x%02X rawP=%lu rawT=%u Pbar=%.3f\n",
-                  ch, status, (unsigned long)r.rawP24, (unsigned)r.rawT16, r.p_bar);
+    Serial.printf("ch=%u status=0x%02X rawP=%lu rawT=%u Pbar=%.3f T=%.1fC(inaccurate!)\n",
+                  ch, status, (unsigned long)r.rawP24, (unsigned)r.rawT16, r.p_bar, r.temp_c);
   }
 }
 
